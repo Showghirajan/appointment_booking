@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Portal</title>
+</head>
+<body>
+    <h1>Doctor Portal</h1>
+
+    <!-- Pending Appointments -->
+    <h2>Pending Appointments</h2>
+    <ul>
+        {% for appointment in appointments %}
+            <li>Patient: {{ appointment.patient.name }} - Slot: {{ appointment.slot }} 
+            <form method="POST" action="{% url 'appointment_decision' appointment.id %}">
+                {% csrf_token %}
+                <button type="submit" name="action" value="accept">Accept</button>
+                <button type="submit" name="action" value="reject">Reject</button>
+            </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Availability Form -->
+    <h2>Add Availability</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit Availability</button>
+    </form>
+
+    <!-- Display Existing Availability -->
+    <h2>Your Availability</h2>
+    <ul>
+        {% for avail in availability %}
+            <li>{{ avail.day_of_week }}: {{ avail.start_time }} - {{ avail.end_time }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
+
+

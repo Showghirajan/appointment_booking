@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Appointments</title>
+</head>
+<body>
+    <header>
+        <h1>Patient Appointments</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'patient_login' %}">Patient Login</a></li>
+                <li><a href="{% url 'doctor_portal' %}">Doctor Portal</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Your Appointments</h2>
+        <ul>
+            {% for appointment in appointments %}
+                <li>
+                    Doctor: Dr. {{ appointment.doctor.name }} - Time: {{ appointment.appointment_datetime }} - Status: {{ appointment.status }}
+                </li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>

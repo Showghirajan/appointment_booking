@@ -1,0 +1,40 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Portal</title>
+</head>
+<body>
+    <h1>Patient Portal</h1>
+
+    <!-- Doctors List -->
+    <h2>Available Doctors</h2>
+    <ul>
+        {% for doctor in doctors %}
+            <li>
+                <strong>Dr. {{ doctor.name }}</strong><br>
+                Specialization: {{ doctor.specialization }}<br>
+                Availability:
+                <ul>
+                    <!-- Loop through the availability for each doctor -->
+                    {% for slot in doctor.availability_set.all %}
+                        <li>{{ slot.day_of_week }}: {{ slot.start_time }} - {{ slot.end_time }}</li>
+                    {% empty %}
+                        <li>No availability listed</li>
+                    {% endfor %}
+                </ul>
+                <!-- Book Appointment button -->
+                <a href="{% url 'book_appointment' doctor.id %}">Book Appointment</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Check Status button -->
+    <h2>Your Appointments</h2>
+    <a href="{% url 'patient_status' %}">Check Appointment Status</a>
+
+</body>
+</html>

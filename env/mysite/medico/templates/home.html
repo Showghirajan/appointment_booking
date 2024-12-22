@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <h1>Welcome to the Doctor-Patient Portal</h1>
+    
+    <form action="{% url 'doctor_login' %}" method="get">
+        <button type="submit">Doctor</button>
+    </form>
+
+    <form action="{% url 'patient_login' %}" method="get">
+        <button type="submit">Patient</button>
+    </form>
+    
+</body>
+</html>

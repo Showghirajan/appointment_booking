@@ -1,0 +1,36 @@
+
+
+services:
+  web:
+    build: .
+    container_name: django_medico
+    command: python manage.py runserver 0.0.0.0:9999
+    volumes:
+      - .:/medico
+    ports:
+      - "9999:9999"
+    depends_on:
+      db:
+        condition: service_healthy  # Ensure the db service is healthy before running Django
+
+  db:
+    image: mysql:8
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root        # Replace with your desired root password
+      MYSQL_DATABASE: appoint          # Database name you want to use for Django
+      MYSQL_USER: root                 # MySQL username (same as root in your case)
+      MYSQL_PASSWORD: root             # MySQL password (same as root in your case)
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
+
+volumes:
+  mysql_data: {}

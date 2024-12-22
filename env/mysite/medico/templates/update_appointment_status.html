@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Appointment Status</title>
+</head>
+<body>
+    <h1>Update Appointment Status</h1>
+    <form method="post">
+        {% csrf_token %}
+        
+            <h2>Appointment with Dr. {{ appointment.doctor.name }} on {{ appointment.appointment_datetime }}</h2>
+            <label for="status">Status:</label>
+            <select id="status" name="status">
+                <option value="PENDING" {% if appointment.status == 'PENDING' %}selected{% endif %}>Pending</option>
+                <option value="CONFIRMED" {% if appointment.status == 'CONFIRMED' %}selected{% endif %}>Confirmed</option>
+                <option value="REJECTED" {% if appointment.status == 'REJECTED' %}selected{% endif %}>Rejected</option>
+            </select>
+            <br><br>
+            <button type="submit">Update Status</button>
+        </form>
+    </body>
+    </html>
+    
