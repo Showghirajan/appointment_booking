@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,11 +24,36 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 import os
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback-secret-key')
 
+
+
+
 #SECRET_KEY = 'django-insecure-+^uo=q^q6f)fq*q&x5((&(!*k*wey_qy&z#r62mtazzw78-2(-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS = ['*']
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
+
+# Update ALLOWED_HOSTS to include all necessary hosts
+ALLOWED_HOSTS = [
+    'appbooking-f0dbbje8ewatbva5.canadacentral-01.azurewebsites.net',
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+    '169.254.131.4',
+    '169.254.131.5',
+    '169.254.133.2',
+    '169.254.133.3',
+    '169.254.131.3',
+    '169.254.131.2',  # Add this line
+]
+# Update CSRF_TRUSTED_ORIGINS with https://
+CSRF_TRUSTED_ORIGINS = [
+    'https://appbooking-f0dbbje8ewatbva5.canadacentral-01.azurewebsites.net'
+]
+
+
+
+
+
 
 
 
@@ -48,7 +74,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware', 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -77,16 +103,45 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+# 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'appoint',       # Replace with your MySQL database name
-        'USER': 'root',       # Replace with your MySQL username
-        'PASSWORD': 'root',  # Replace with your MySQL password
-        'HOST': 'db',                # 'db' matches the service name in docker-compose.yml
-        'PORT': '3306',              # Default MySQL port
+        'NAME': os.environ.get('MYSQL_DATABASE', 'appoint'),
+        'USER': os.environ.get('MYSQL_USER', 'root'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD', 'root'),
+        'HOST': os.environ.get('MYSQL_HOST', 'db'),
+        'PORT': os.environ.get('MYSQL_PORT', '3306'),
     }
+}
+# Add this for better connection handling
+CONN_HEALTH_CHECKS = True
+# DEBUG Configuration
+
+
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logging.debug(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")
+logging.debug(f"CSRF_TRUSTED_ORIGINS: {CSRF_TRUSTED_ORIGINS}")
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
 }
 
 # Password validation
@@ -111,11 +166,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-us'  # Ensure this is correct and matches your localization setup.
+
 
 TIME_ZONE = 'UTC'
+USE_I18N = False  # Set this to False temporarily to disable translations.
 
-USE_I18N = True
+
 
 USE_TZ = True
 
@@ -124,6 +181,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
